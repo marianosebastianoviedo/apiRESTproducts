@@ -21,7 +21,8 @@ export const getTotalProducts = async (req , res) => {
     }
 } 
 export const createNewProduct = async (req , res) => {
-    const { Name , Description } = await req.body;
+    const { Name , Description, Quantity } = await req.body;
+    /* const { Name , Description } = await req.body;
     let { Quantity } = await req.body;
     if (Name == null || Description == null) {
         return res.status(400).json({
@@ -30,8 +31,7 @@ export const createNewProduct = async (req , res) => {
     } 
     if (Quantity == null) {
         Quantity = 0;
-    }
-
+    } */
     try {
         const pool = await getConnection();
         pool.request()
@@ -78,11 +78,11 @@ export const updateProductById = async (req , res) => {
     try {
         const { Name , Description, Quantity } = await req.body;
         const { id } = req.params;
-        if (Name == null || Description == null || Quantity == null) {
+        /* if (Name == null || Description == null || Quantity == null) {
             return res.status(400).json({
                 msg: 'Bad request, Please fill all fields'
             });
-        }
+        } */
         const pool = await getConnection();
         await pool.request()
         .input('name', sql.VarChar , Name)
