@@ -1,9 +1,9 @@
-import { getConnection, sql, queries } from "../database";
+import { getConnection, sql, PROCEDURES } from "../database";
 
 export const getProducts = async (req , res) => {
     try {
         const pool = await getConnection();
-        const result= await pool.request().query(queries.getAllProducts);
+        const result= await pool.request().query(PROCEDURES.getAllProducts);
         res.json(result.recordset);
     } catch (error) {
         res.status(500);
@@ -13,7 +13,7 @@ export const getProducts = async (req , res) => {
 export const getTotalProducts = async (req , res) => {
     try {
         const pool = await getConnection();
-        const result= await pool.request().query(queries.getTotalProducts);
+        const result= await pool.request().query(PROCEDURES.getTotalProducts);
         res.json(result.recordset[0]);
     } catch (error) {
         res.status(500);
@@ -38,7 +38,7 @@ export const createNewProduct = async (req , res) => {
         .input('name', sql.VarChar , Name)
         .input('description', sql.Text , Description)
         .input('quantity', sql.Int , Quantity)
-        .query(queries.addNewProduct);
+        .query(PROCEDURES.addNewProduct);
         
         res.json({Name, Description, Quantity});
     } catch (error) {
@@ -53,7 +53,7 @@ export const getProductById = async (req , res) => {
         const pool = await getConnection();
         const result = await pool.request()
         .input('Id',id)
-        .query(queries.getProductById);
+        .query(PROCEDURES.getProductById);
         
         res.json(result.recordset[0]);
     } catch (error) {
@@ -67,7 +67,7 @@ export const deleteProductById = async (req , res) => {
         const pool = await getConnection();
         const result = await pool.request()
         .input('Id',id)
-        .query(queries.deleteProduct);
+        .query(PROCEDURES.deleteProduct);
         res.json(result.rowsAffected[0]);
     } catch (error) {
         res.status(500);
@@ -84,13 +84,18 @@ export const updateProductById = async (req , res) => {
             });
         } */
         const pool = await getConnection();
-        await pool.request()
+        const result = await pool.request()
         .input('name', sql.VarChar , Name)
         .input('description', sql.Text , Description)
         .input('quantity', sql.Int , Quantity)
         .input('Id', sql.Int ,id)
-        .query(queries.updateProductById);
-        res.json({ Name , Description, Quantity });
+        .query(PROCEDURES.updateProductById);
+        if (result.recordset[0].ErrorMessage !== undefined) {
+            return res.status(403).json(result.recordset[0]);
+        } else {
+           return res.send(result.recordset[0]);
+           /* res.json(result.recordset); */
+        }
     } catch (error) {
         res.status(500);
         res.send(error.message);

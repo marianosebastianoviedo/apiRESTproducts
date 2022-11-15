@@ -6,3 +6,11 @@ export const queries = {
     updateProductById: 'UPDATE [Ciudadanos360_QA].[dbo].[Products] SET name = @Name, description = @Description, quantity = @Quantity WHERE Id = @Id',
     deleteProduct: 'DELETE FROM [Ciudadanos360_QA].[dbo].[Products] WHERE Id = @Id'
 }
+export const PROCEDURES = {
+    getAllProducts: 'EXEC getAllProducts',
+    getTotalProducts: 'EXEC getTotalProducts',
+    addNewProduct: 'EXEC addNewProduct @Name, @Description, @Quantity',
+    getProductById: 'EXEC getProductById @Id',
+    updateProductById: 'EXEC updateProductById @Id, @Name, @Description, @Quantity',
+    deleteProduct: 'EXEC deleteProduct @Id'
+}
